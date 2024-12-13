@@ -12,8 +12,14 @@ public class Playercontroler : MonoBehaviour
     [Header("shooting")]
     public GameObject bullet;
     public GameObject bulletSpawn;
-
-    // Update is called once per frame
+    private Rigidbody rb;
+    public bool isOnGround;
+    public float jumpForce;
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        isOnGround = true;
+    }
     void Update()
     {
         // Axis setup
@@ -27,6 +33,19 @@ public class Playercontroler : MonoBehaviour
         if (Input.GetButtonDown("Shoot"))
         {
             Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+        }
+        //Jumping
+        if(Input.GetButtonDown("Jump") && isOnGround)
+        {
+            isOnGround = false;
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isOnGround = true;
         }
     }
 }
